@@ -97,8 +97,8 @@ Al abrir la aplicación, verás una lista de tareas existentes y un formulario p
 ![update task](img/im3.png)
 ![list task](img/im4.png)
 ![delete task](img/im5.png)
-
-
+![generate task json](img/im88.png)
+![Download task json](img/im9.png)
 ---
 
 ## 🔧 Configuración Adicional  
