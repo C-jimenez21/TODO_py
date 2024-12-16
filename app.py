@@ -2,6 +2,8 @@ import streamlit as st
 from database import get_tasks, add_task, update_task_status, delete_task, update_task
 from models import SessionLocal, Status
 
+import pandas as pd
+
 # Configuración de la aplicación
 st.set_page_config(page_title="To-Do App", layout="centered")
 
@@ -54,8 +56,40 @@ def main():
                         delete_task(task["id"])
                         st.rerun()
 
-# Componente para mostrar una tarea
+#Descargar las tareas en formato json
 
+def get_tasks_json():
+    try:
+        # Consultar todas las tareas
+        tasks = get_tasks()
+        # Crear un DataFrame a partir de los datos
+        df = pd.DataFrame(tasks)
+
+        # Exportar a JSON
+        return df.to_json(orient="records", indent=4, force_ascii=False)
+
+    except Exception as e:
+        st.error(f"Error exportando las tareas")
+        return None
+
+
+
+
+# Sección de Streamlit para exportar tareas
+st.sidebar.title("Exportar Datos")
+if st.sidebar.button("Exportar Tareas a JSON"):
+    json_data = get_tasks_json()
+    if json_data:
+        # Crear botón para descargar el archivo JSON
+        st.sidebar.download_button(
+            label="Descargar JSON",
+            data=json_data,
+            file_name="tasks.json",
+            mime="application/json"
+        )
+        st.sidebar.success("Archivo generado y listo para descargar.")
+    else:
+        st.sidebar.error("No se pudo generar el archivo JSON.")
 # Función para abrir un modal de edición
 @st.dialog("Edita tu tarea...")
 def open_edit_modal(task, statuses, actualState):
